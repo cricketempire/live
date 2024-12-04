@@ -1,90 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dynamic Video Player</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script>
-  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f4f4f4;
-    }
-    #jwplayerDiv {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto;
-      z-index: 1;
-    }
-    .banner {
-      text-align: center;
-      margin: 20px auto;
-      padding: 15px;
-      max-width: 800px;
-      background-color: #0078d7;
-      color: white;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-    .banner a {
-      color: #ffde59;
-      text-decoration: none;
-    }
-    .banner a:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL to Iframe</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #urlFormContainer {
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        /* Adjusted iframe height to maintain 16:9 aspect ratio */
+        #contentFrame {
+            width: 100%;
+            height: calc(100vw * 8 / 16); /* 16:8 aspect ratio */
+            border: none;
+        }
+        /* Popup styling */
+        #popupMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #f8f8f8;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        #popupMessage button {
+            background-color: #0088cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        /* Style for cancel button */
+        #popupMessage .cancel-button {
+            background-color: #ccc;
+            color: black;
+        }
+    </style>
 </head>
 <body>
-  <div id="jwplayerDiv"></div>
 
-  <!-- Banner Section -->
-  <div class="banner">
-    Join our Telegram for more live updates: 
-    <a href="https://t.me/+IXCKFIL7DE80MDc9" target="_blank">Click Here</a>
-  </div>
+<div id="urlFormContainer" style="display: none;">
+    <form id="urlForm">
+        <label for="urlInput">URL:</label>
+        <input type="text" id="urlInput" name="urlInput" required>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
-  <script>
-    // Function to retrieve the videoUrl parameter from the URL
-    function getQueryParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+<iframe id="contentFrame" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen="true" scrolling="no" src="https://ss.enamy3.workers.dev/?id=456239772"></iframe>
+
+<!-- Popup for Telegram Join Message -->
+<div id="popupMessage">
+    <p>Join our Telegram Channel for the latest updates!</p>
+    <a href="https://t.me/+Mo019Hv4zrthOGQ1" target="_blank">
+        <button>Join Telegram Channel</button>
+    </a>
+    <button class="cancel-button" onclick="hidePopup()">Cancel</button>
+</div>
+
+<script>
+    // Function to show popup
+    function showPopup() {
+        document.getElementById("popupMessage").style.display = "block";
     }
 
-    // Get the videoUrl parameter from the URL
-    const videoUrl = getQueryParam('videoUrl');
-
-    if (videoUrl) {
-      // Initialize JWPlayer with the dynamic videoUrl
-      jwplayer("jwplayerDiv").setup({
-        file: videoUrl,
-        autostart: true,
-        controls: true,
-        width: "100%",
-        aspectratio: "16:9"
-      });
-    } else {
-      // If no videoUrl is provided, display a message
-      document.getElementById("jwplayerDiv").innerHTML = 
-        <p style="text-align: center; font-size: 18px; color: #333;">
-          No video URL provided! Please add ?videoUrl=YOUR_VIDEO_URL to the page URL.
-        </p>;
+    // Function to hide popup
+    function hidePopup() {
+        document.getElementById("popupMessage").style.display = "none";
     }
-  </script><script async="async" data-cfasync="false" src="//pl25094307.profitablecpmrate.com/e8ecf6132ca737e24336c410060418be/invoke.js"></script>
-  <div id="container-e8ecf6132ca737e24336c410060418be"></div><script type="text/javascript">
- atOptions = {
-  'key' : 'cc42633bf71e41597bfec6b852c24f6f',
-  'format' : 'iframe',
-  'height' : 250,
-  'width' : 300,
-  'params' : {}
- };
+
+    // Show popup after 10 seconds
+    setTimeout(showPopup, 10000); // Show popup after 10 seconds
+
+    // Function to get query parameter
+    function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Function to generate a token from URL with a specified expiration time
+    function generateToken(url, expirationMinutes) {
+        const currentTime = Date.now();
+        const expirationTime = currentTime + expirationMinutes * 60 * 60 * 1000; // Convert hours to milliseconds
+        const tokenData = { url, expiration: expirationTime };
+        return btoa(JSON.stringify(tokenData));
+    }
+
+    // Function to decode the token to URL
+    function decodeToken(token) {
+        return atob(token);
+    }
+
+    // Event listener for form submission
+    document.getElementById('urlForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var url = document.getElementById('urlInput').value;
+        if (url) {
+            var token = generateToken(url, 5); // Set token validity to 5 hours
+            window.location.href = ${window.location.pathname}?token=${encodeURIComponent(token)};
+        } else {
+            alert("Please enter a valid URL.");
+        }
+    });
+// On page load, check for token and set iframe src
+    window.onload = function() {
+        var token = getQueryParameter('token');
+        if (token) {
+            var tokenData = JSON.parse(decodeToken(token));
+            var currentTime = Date.now();
+            if (tokenData.expiration > currentTime) {
+                document.getElementById('contentFrame').src = tokenData.url;
+                document.getElementById('urlFormContainer').style.display = 'none';
+            } else {
+                alert('Token has expired. Please enter a new URL.');
+            }
+        }
+    };
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/cc42633bf71e41597bfec6b852c24f6f/invoke.js"></script>
+
+<!-- BEGIN: Powered by Supercounters.com -->
+<center>
+    <div id="sconlineimg" title="Free Online Counter" style="position: relative; display: inline-block; width: 80px; height: 21px; overflow: hidden; cursor: pointer; background-image: url(&quot;//widget.supercounters.com/images/online/e61c1c.png&quot;); background-repeat: no-repeat; background-position: 0px 0px;">
+        <div style="display: inline-block; font-family: Arial; font-size: 11px; color: rgb(255, 255, 255); position: absolute; font-weight: normal; width: 80px; height: 15px; top: 0px; left: 0px; overflow: hidden; font-style: normal; text-transform: none; text-decoration: none; letter-spacing: 0px; word-spacing: 0px; padding: 0px; margin: 4px 0px 0px; text-align: center; line-height: normal; text-size-adjust: none; direction: ltr; text-shadow: none; vertical-align: baseline;">
+            75 ONLINE
+        </div>
+    </div>
+    <br>
+    <noscript>
+        <a href="https://www.supercounters.com/">free online counter</a>
+    </noscript>
+</center>
+<!-- END: Powered by Supercounters.com -->
+
 </body>
 </html>
